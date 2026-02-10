@@ -9,7 +9,7 @@ Share your knowledge, ask questions, and get the latest FIT SDK news in the [FIT
 A C++ compiler is required to compile the FIT C++ SDK, such as the GNU g++/gcc, MSVC, or Apple Clang compilers.
 
 ## Install
-The FIT C++ SDK can be cloned from the [FIT C++ SDK repository on GitHub](https://github.com/garmin/fit-cpp-sdk).
+The FIT C++ SDK can be [cloned from the FIT C++ SDK repository on GitHub](https://github.com/garmin/fit-cpp-sdk).
 
 ## Examples
 Example implementations of the FIT SDK are provided and can be found in the examples/ folder.
