@@ -13,8 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Make decode
-        run: make --directory=src/examples/decode
+        run: make --directory=examples/decode
       - name: Make encode
-        run: make --directory=src/examples/encode
+        run: make --directory=examples/encode
       - name: Run encode
-        run: src/examples/encode/encode
+        run: src/examples/encode
