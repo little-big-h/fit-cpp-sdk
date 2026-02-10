@@ -17,4 +17,4 @@ jobs:
       - name: Make encode
         run: make --directory=examples/encode
       - name: Run encode
-        run: src/examples/encode
+        run: examples/encode/encode
