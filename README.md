@@ -15,7 +15,7 @@ The FIT C++ SDK can be [cloned from the FIT C++ SDK repository on GitHub](https:
 Example implementations of the FIT SDK are provided and can be found in the examples/ folder.
 * **Decode**: Demonstrates decoding a FIT file; and use of the Decode and Message Broadcaster classes and Message Listener event interfaces.
 
-* **Encode**: Demonstrates encoding a FIT file and programmatic generation of messages. Three sample FIT files are created. ExampleActivity.fit, ExampleSettings.fit, and ExampleMonitoringFile.fit
+* **Encode**: Demonstrates encoding an activity FIT file and programmatic generation of messages.
 
 To compile the examples, leverage the makefiles. Note that the makefiles use the GNU g++ compiler.
 ```bash
