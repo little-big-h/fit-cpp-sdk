@@ -10,21 +10,21 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#if !defined(FIT_SPEED_ZONE_MESG_LISTENER_HPP)
-#define FIT_SPEED_ZONE_MESG_LISTENER_HPP
+#if !defined(FIT_NAP_EVENT_MESG_LISTENER_HPP)
+#define FIT_NAP_EVENT_MESG_LISTENER_HPP
 
-#include "fit_speed_zone_mesg.hpp"
+#include "fit_nap_event_mesg.hpp"
 
 namespace fit
 {
 
-class SpeedZoneMesgListener
+class NapEventMesgListener
 {
 public:
-    virtual ~SpeedZoneMesgListener() {}
-    virtual void OnMesg(SpeedZoneMesg& mesg) = 0;
+    virtual ~NapEventMesgListener() {}
+    virtual void OnMesg(NapEventMesg& mesg) = 0;
 };
 
 } // namespace fit
 
-#endif // !defined(FIT_SPEED_ZONE_MESG_LISTENER_HPP)
+#endif // !defined(FIT_NAP_EVENT_MESG_LISTENER_HPP)

@@ -10,33 +10,38 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#if !defined(FIT_MESG_CAPABILITIES_MESG_HPP)
-#define FIT_MESG_CAPABILITIES_MESG_HPP
+#if !defined(FIT_NAP_EVENT_MESG_HPP)
+#define FIT_NAP_EVENT_MESG_HPP
 
 #include "fit_mesg.hpp"
 
 namespace fit
 {
 
-class MesgCapabilitiesMesg : public Mesg
+class NapEventMesg : public Mesg
 {
 public:
     class FieldDefNum final
     {
     public:
        static const FIT_UINT8 MessageIndex = 254;
-       static const FIT_UINT8 File = 0;
-       static const FIT_UINT8 MesgNum = 1;
-       static const FIT_UINT8 CountType = 2;
-       static const FIT_UINT8 Count = 3;
+       static const FIT_UINT8 Timestamp = 253;
+       static const FIT_UINT8 StartTime = 0;
+       static const FIT_UINT8 StartTimezoneOffset = 1;
+       static const FIT_UINT8 EndTime = 2;
+       static const FIT_UINT8 EndTimezoneOffset = 3;
+       static const FIT_UINT8 Feedback = 4;
+       static const FIT_UINT8 IsDeleted = 5;
+       static const FIT_UINT8 Source = 6;
+       static const FIT_UINT8 UpdateTimestamp = 7;
        static const FIT_UINT8 Invalid = FIT_FIELD_NUM_INVALID;
     };
 
-    MesgCapabilitiesMesg(void) : Mesg(Profile::MESG_MESG_CAPABILITIES)
+    NapEventMesg(void) : Mesg(Profile::MESG_NAP_EVENT)
     {
     }
 
-    MesgCapabilitiesMesg(const Mesg &mesg) : Mesg(mesg)
+    NapEventMesg(const Mesg &mesg) : Mesg(mesg)
     {
     }
 
@@ -72,10 +77,41 @@ public:
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Checks the validity of file field
+    // Checks the validity of timestamp field
     // Returns FIT_TRUE if field is valid
     ///////////////////////////////////////////////////////////////////////
-    FIT_BOOL IsFileValid() const
+    FIT_BOOL IsTimestampValid() const
+    {
+        const Field* field = GetField(253);
+        if( FIT_NULL == field )
+        {
+            return FIT_FALSE;
+        }
+
+        return field->IsValueValid();
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Returns timestamp field
+    ///////////////////////////////////////////////////////////////////////
+    FIT_DATE_TIME GetTimestamp(void) const
+    {
+        return GetFieldUINT32Value(253, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Set timestamp field
+    ///////////////////////////////////////////////////////////////////////
+    void SetTimestamp(FIT_DATE_TIME timestamp)
+    {
+        SetFieldUINT32Value(253, timestamp, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Checks the validity of start_time field
+    // Returns FIT_TRUE if field is valid
+    ///////////////////////////////////////////////////////////////////////
+    FIT_BOOL IsStartTimeValid() const
     {
         const Field* field = GetField(0);
         if( FIT_NULL == field )
@@ -87,26 +123,28 @@ public:
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Returns file field
+    // Returns start_time field
+    // Units: seconds
     ///////////////////////////////////////////////////////////////////////
-    FIT_FILE GetFile(void) const
+    FIT_DATE_TIME GetStartTime(void) const
     {
-        return GetFieldENUMValue(0, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+        return GetFieldUINT32Value(0, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Set file field
+    // Set start_time field
+    // Units: seconds
     ///////////////////////////////////////////////////////////////////////
-    void SetFile(FIT_FILE file)
+    void SetStartTime(FIT_DATE_TIME startTime)
     {
-        SetFieldENUMValue(0, file, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+        SetFieldUINT32Value(0, startTime, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Checks the validity of mesg_num field
+    // Checks the validity of start_timezone_offset field
     // Returns FIT_TRUE if field is valid
     ///////////////////////////////////////////////////////////////////////
-    FIT_BOOL IsMesgNumValid() const
+    FIT_BOOL IsStartTimezoneOffsetValid() const
     {
         const Field* field = GetField(1);
         if( FIT_NULL == field )
@@ -118,26 +156,28 @@ public:
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Returns mesg_num field
+    // Returns start_timezone_offset field
+    // Units: minutes
     ///////////////////////////////////////////////////////////////////////
-    FIT_MESG_NUM GetMesgNum(void) const
+    FIT_SINT16 GetStartTimezoneOffset(void) const
     {
-        return GetFieldUINT16Value(1, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+        return GetFieldSINT16Value(1, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Set mesg_num field
+    // Set start_timezone_offset field
+    // Units: minutes
     ///////////////////////////////////////////////////////////////////////
-    void SetMesgNum(FIT_MESG_NUM mesgNum)
+    void SetStartTimezoneOffset(FIT_SINT16 startTimezoneOffset)
     {
-        SetFieldUINT16Value(1, mesgNum, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+        SetFieldSINT16Value(1, startTimezoneOffset, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Checks the validity of count_type field
+    // Checks the validity of end_time field
     // Returns FIT_TRUE if field is valid
     ///////////////////////////////////////////////////////////////////////
-    FIT_BOOL IsCountTypeValid() const
+    FIT_BOOL IsEndTimeValid() const
     {
         const Field* field = GetField(2);
         if( FIT_NULL == field )
@@ -149,26 +189,28 @@ public:
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Returns count_type field
+    // Returns end_time field
+    // Units: seconds
     ///////////////////////////////////////////////////////////////////////
-    FIT_MESG_COUNT GetCountType(void) const
+    FIT_DATE_TIME GetEndTime(void) const
     {
-        return GetFieldENUMValue(2, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+        return GetFieldUINT32Value(2, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Set count_type field
+    // Set end_time field
+    // Units: seconds
     ///////////////////////////////////////////////////////////////////////
-    void SetCountType(FIT_MESG_COUNT countType)
+    void SetEndTime(FIT_DATE_TIME endTime)
     {
-        SetFieldENUMValue(2, countType, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+        SetFieldUINT32Value(2, endTime, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Checks the validity of count field
+    // Checks the validity of end_timezone_offset field
     // Returns FIT_TRUE if field is valid
     ///////////////////////////////////////////////////////////////////////
-    FIT_BOOL IsCountValid() const
+    FIT_BOOL IsEndTimezoneOffsetValid() const
     {
         const Field* field = GetField(3);
         if( FIT_NULL == field )
@@ -180,134 +222,151 @@ public:
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Returns count field
+    // Returns end_timezone_offset field
+    // Units: minutes
     ///////////////////////////////////////////////////////////////////////
-    FIT_UINT16 GetCount(void) const
+    FIT_SINT16 GetEndTimezoneOffset(void) const
     {
-        return GetFieldUINT16Value(3, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+        return GetFieldSINT16Value(3, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Set count field
+    // Set end_timezone_offset field
+    // Units: minutes
     ///////////////////////////////////////////////////////////////////////
-    void SetCount(FIT_UINT16 count)
+    void SetEndTimezoneOffset(FIT_SINT16 endTimezoneOffset)
     {
-        SetFieldUINT16Value(3, count, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+        SetFieldSINT16Value(3, endTimezoneOffset, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Checks the validity of num_per_file field
+    // Checks the validity of feedback field
     // Returns FIT_TRUE if field is valid
     ///////////////////////////////////////////////////////////////////////
-    FIT_BOOL IsNumPerFileValid() const
+    FIT_BOOL IsFeedbackValid() const
     {
-        const Field* field = GetField(3);
+        const Field* field = GetField(4);
         if( FIT_NULL == field )
         {
             return FIT_FALSE;
         }
 
-        if( !CanSupportSubField( field, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_NUM_PER_FILE ) )
-        {
-            return FIT_FALSE;
-        }
-
-        return field->IsValueValid(0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_NUM_PER_FILE);
+        return field->IsValueValid();
     }
 
-
     ///////////////////////////////////////////////////////////////////////
-    // Returns num_per_file field
+    // Returns feedback field
     ///////////////////////////////////////////////////////////////////////
-    FIT_UINT16 GetNumPerFile(void) const
+    FIT_NAP_PERIOD_FEEDBACK GetFeedback(void) const
     {
-        return GetFieldUINT16Value(3, 0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_NUM_PER_FILE);
+        return GetFieldENUMValue(4, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Set num_per_file field
+    // Set feedback field
     ///////////////////////////////////////////////////////////////////////
-    void SetNumPerFile(FIT_UINT16 numPerFile)
+    void SetFeedback(FIT_NAP_PERIOD_FEEDBACK feedback)
     {
-        SetFieldUINT16Value(3, numPerFile, 0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_NUM_PER_FILE);
+        SetFieldENUMValue(4, feedback, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Checks the validity of max_per_file field
+    // Checks the validity of is_deleted field
     // Returns FIT_TRUE if field is valid
     ///////////////////////////////////////////////////////////////////////
-    FIT_BOOL IsMaxPerFileValid() const
+    FIT_BOOL IsIsDeletedValid() const
     {
-        const Field* field = GetField(3);
+        const Field* field = GetField(5);
         if( FIT_NULL == field )
         {
             return FIT_FALSE;
         }
 
-        if( !CanSupportSubField( field, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_MAX_PER_FILE ) )
-        {
-            return FIT_FALSE;
-        }
-
-        return field->IsValueValid(0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_MAX_PER_FILE);
+        return field->IsValueValid();
     }
 
-
     ///////////////////////////////////////////////////////////////////////
-    // Returns max_per_file field
+    // Returns is_deleted field
     ///////////////////////////////////////////////////////////////////////
-    FIT_UINT16 GetMaxPerFile(void) const
+    FIT_BOOL GetIsDeleted(void) const
     {
-        return GetFieldUINT16Value(3, 0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_MAX_PER_FILE);
+        return GetFieldENUMValue(5, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Set max_per_file field
+    // Set is_deleted field
     ///////////////////////////////////////////////////////////////////////
-    void SetMaxPerFile(FIT_UINT16 maxPerFile)
+    void SetIsDeleted(FIT_BOOL isDeleted)
     {
-        SetFieldUINT16Value(3, maxPerFile, 0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_MAX_PER_FILE);
+        SetFieldENUMValue(5, isDeleted, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Checks the validity of max_per_file_type field
+    // Checks the validity of source field
     // Returns FIT_TRUE if field is valid
     ///////////////////////////////////////////////////////////////////////
-    FIT_BOOL IsMaxPerFileTypeValid() const
+    FIT_BOOL IsSourceValid() const
     {
-        const Field* field = GetField(3);
+        const Field* field = GetField(6);
         if( FIT_NULL == field )
         {
             return FIT_FALSE;
         }
 
-        if( !CanSupportSubField( field, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_MAX_PER_FILE_TYPE ) )
+        return field->IsValueValid();
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Returns source field
+    ///////////////////////////////////////////////////////////////////////
+    FIT_NAP_SOURCE GetSource(void) const
+    {
+        return GetFieldENUMValue(6, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Set source field
+    ///////////////////////////////////////////////////////////////////////
+    void SetSource(FIT_NAP_SOURCE source)
+    {
+        SetFieldENUMValue(6, source, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Checks the validity of update_timestamp field
+    // Returns FIT_TRUE if field is valid
+    ///////////////////////////////////////////////////////////////////////
+    FIT_BOOL IsUpdateTimestampValid() const
+    {
+        const Field* field = GetField(7);
+        if( FIT_NULL == field )
         {
             return FIT_FALSE;
         }
 
-        return field->IsValueValid(0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_MAX_PER_FILE_TYPE);
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////
-    // Returns max_per_file_type field
-    ///////////////////////////////////////////////////////////////////////
-    FIT_UINT16 GetMaxPerFileType(void) const
-    {
-        return GetFieldUINT16Value(3, 0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_MAX_PER_FILE_TYPE);
+        return field->IsValueValid();
     }
 
     ///////////////////////////////////////////////////////////////////////
-    // Set max_per_file_type field
+    // Returns update_timestamp field
+    // Comment: The timestamp representing when this nap event was last updated
     ///////////////////////////////////////////////////////////////////////
-    void SetMaxPerFileType(FIT_UINT16 maxPerFileType)
+    FIT_DATE_TIME GetUpdateTimestamp(void) const
     {
-        SetFieldUINT16Value(3, maxPerFileType, 0, (FIT_UINT16) Profile::MESG_CAPABILITIES_MESG_COUNT_FIELD_MAX_PER_FILE_TYPE);
+        return GetFieldUINT32Value(7, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Set update_timestamp field
+    // Comment: The timestamp representing when this nap event was last updated
+    ///////////////////////////////////////////////////////////////////////
+    void SetUpdateTimestamp(FIT_DATE_TIME updateTimestamp)
+    {
+        SetFieldUINT32Value(7, updateTimestamp, 0, FIT_SUBFIELD_INDEX_MAIN_FIELD);
     }
 
 };
 
 } // namespace fit
 
-#endif // !defined(FIT_MESG_CAPABILITIES_MESG_HPP)
+#endif // !defined(FIT_NAP_EVENT_MESG_HPP)
