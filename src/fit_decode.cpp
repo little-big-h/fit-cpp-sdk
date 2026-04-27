@@ -11,6 +11,7 @@
 
 
 
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include "fit_decode.hpp"
@@ -243,9 +244,40 @@ FIT_BOOL Decode::Resume(void)
             if (pause)
                 return FIT_FALSE;
 
+            // Fast path: bulk-copy intermediate field data bytes, bypassing the per-byte
+            // state machine dispatch for all but the first and last byte of each field.
+            // ReadByte still handles field initialization (fieldBytesLeft==0) and field
+            // completion (the final byte), preserving all existing logic exactly.
+            if (state == STATE_FIELD_DATA && fieldBytesLeft > 1 &&
+                (skipHeader == FIT_TRUE || fileBytesLeft > 2))
+            {
+                FIT_UINT32 available = bytesRead - currentByteIndex;
+                FIT_UINT32 canCopy = (FIT_UINT32)(fieldBytesLeft - 1); // leave last byte for ReadByte
+                if (canCopy > available - 1)    // keep at least 1 byte for ReadByte
+                    canCopy = available - 1;
+                if (skipHeader == FIT_FALSE && canCopy > fileBytesLeft - 2)
+                    canCopy = fileBytesLeft - 2; // don't consume trailing CRC bytes
+
+                if (canCopy > 0)
+                {
+                    if (skipHeader == FIT_FALSE)
+                    {
+                        for (FIT_UINT32 i = 0; i < canCopy; i++)
+                            crc = CRC::Get16(crc, (FIT_UINT8)buffer[currentByteIndex + i]);
+                        fileBytesLeft -= canCopy;
+                    }
+                    std::memcpy(&fieldData[fieldDataIndex], &buffer[currentByteIndex], canCopy);
+                    fieldDataIndex  += (FIT_UINT8)canCopy;
+                    fieldBytesLeft  -= (FIT_UINT8)canCopy;
+                    currentByteOffset += canCopy;
+                    currentByteIndex  += canCopy; // outer for-loop will +1 past ReadByte's byte
+                }
+            }
+
             decodeReturn = ReadByte((FIT_UINT8)buffer[currentByteIndex]);
 
-            switch (decodeReturn) {
+            if (decodeReturn != RETURN_CONTINUE) // RETURN_CONTINUE is the dominant case
+            { switch (decodeReturn) {
                 case RETURN_CONTINUE:
                     break;
 
@@ -317,7 +349,7 @@ FIT_BOOL Decode::Resume(void)
                 default:
                     currentByteOffset++;
                     return FIT_TRUE;
-            }
+            } } // end switch / end if (decodeReturn != RETURN_CONTINUE)
             currentByteOffset++;
         }
         currentByteIndex = 0;
