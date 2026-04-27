@@ -583,6 +583,7 @@ Decode::RETURN Decode::ReadByte(FIT_UINT8 data)
 
                     mesg = Mesg(localMesgDefs[localMesgIndex].GetNum());
                     mesg.SetLocalNum(localMesgIndex);
+                    mesg.ReserveFields(localMesgDefs[localMesgIndex].GetFields().size() + 1);
                     mesg.AddField(timestampField);
 
                     if (localMesgDefs[localMesgIndex].GetFields().size() == 0)
@@ -610,6 +611,7 @@ Decode::RETURN Decode::ReadByte(FIT_UINT8 data)
 
                         mesg = Mesg(localMesgDefs[localMesgIndex].GetNum());
                         mesg.SetLocalNum(localMesgIndex);
+                        mesg.ReserveFields(localMesgDefs[localMesgIndex].GetFields().size());
 
                         if (localMesgDefs[localMesgIndex].GetFields().size() != 0)
                         {
@@ -801,8 +803,8 @@ Decode::RETURN Decode::ReadByte(FIT_UINT8 data)
 
             if (fieldBytesLeft == 0)
             {
-                MesgDefinition defn = localMesgDefs[localMesgIndex];
-                FieldDefinition* fldDefn = defn.GetFieldByIndex(fieldIndex);
+                const MesgDefinition& defn = localMesgDefs[localMesgIndex];
+                const FieldDefinition* fldDefn = defn.GetFieldByIndex(fieldIndex);
                 FIT_UINT8 baseType = fldDefn->GetType() & FIT_BASE_TYPE_NUM_MASK;
                 FIT_UINT8 typeSize = baseTypeSizes[baseType];
                 FIT_BOOL read = FIT_TRUE;
@@ -832,11 +834,11 @@ Decode::RETURN Decode::ReadByte(FIT_UINT8 data)
 
                         if ( read )
                         {
-                            field.Read(&fieldData, defn.GetFieldByIndex(fieldIndex)->GetSize());
+                            field.Read(&fieldData, fldDefn->GetSize());
                         }
 
                         // The special case time record.
-                        if (defn.GetFieldByIndex(fieldIndex)->GetNum() == FIT_FIELD_NUM_TIMESTAMP)
+                        if (fldDefn->GetNum() == FIT_FIELD_NUM_TIMESTAMP)
                         {
                             timestamp = field.GetUINT32Value();
                             lastTimeOffset = (FIT_UINT8)(timestamp & FIT_HDR_TIME_OFFSET_MASK);

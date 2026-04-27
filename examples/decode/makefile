@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-I"." -I"../../src"
+CFLAGS=-O2 -I"." -I"../../src"
 
 decode: decode.o fit_developer_field.o fit_developer_field_definition.o fit_developer_field_description.o fit_field_base.o fit.o fit_accumulated_field.o fit_accumulator.o fit_buffered_mesg_broadcaster.o fit_buffered_record_mesg_broadcaster.o fit_crc.o fit_decode.o fit_field.o fit_field_definition.o fit_mesg.o fit_mesg_broadcaster.o fit_mesg_definition.o fit_mesg_with_event_broadcaster.o fit_profile.o fit_unicode.o
 	$(CC) $(CFLAGS) decode.o fit_developer_field.o fit_developer_field_definition.o fit_developer_field_description.o fit_field_base.o fit.o fit_accumulated_field.o fit_accumulator.o fit_buffered_mesg_broadcaster.o fit_buffered_record_mesg_broadcaster.o fit_crc.o fit_decode.o fit_field.o fit_field_definition.o fit_mesg.o fit_mesg_broadcaster.o fit_mesg_definition.o fit_mesg_with_event_broadcaster.o fit_profile.o fit_unicode.o -o decode

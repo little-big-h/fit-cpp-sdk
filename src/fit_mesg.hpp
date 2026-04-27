@@ -43,6 +43,7 @@ public:
     FIT_UINT8 GetLocalNum() const;
     void SetLocalNum(const FIT_UINT8 newLocalNum);
     FIT_BOOL HasField(const int fieldNum) const;
+    void ReserveFields(const std::size_t n) { fields.reserve(n); }
     void AddField(const Field& field);
     Field* AddField(const FIT_UINT8 fieldNum);
     void AddDeveloperField(const DeveloperField& field);

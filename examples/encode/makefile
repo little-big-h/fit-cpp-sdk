@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-I"." -I"../../src"
+CFLAGS=-O2 -I"." -I"../../src"
 
 encode: encode.o fit_developer_field.o fit_developer_field_definition.o fit_field_base.o fit_protocol_validator.o fit.o fit_buffer_encode.o fit_crc.o fit_date_time.o fit_encode.o fit_field.o fit_field_definition.o fit_mesg.o fit_mesg_definition.o fit_profile.o fit_unicode.o
 	$(CC) $(CFLAGS) encode.o fit_developer_field.o fit_developer_field_definition.o fit_field_base.o fit_protocol_validator.o fit.o fit_buffer_encode.o fit_crc.o fit_date_time.o fit_encode.o fit_field.o fit_field_definition.o fit_mesg.o fit_mesg_definition.o fit_profile.o fit_unicode.o -o encode

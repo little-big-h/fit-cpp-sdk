@@ -171,7 +171,7 @@ private:
     static const FIT_UINT8 DevFieldNumOffset;
     static const FIT_UINT8 DevFieldSizeOffset;
     static const FIT_UINT8 DevFieldIndexOffset;
-    static const FIT_UINT16 BufferSize = 512;
+    static const FIT_UINT16 BufferSize = 4096;
 
     STATE state;
     FIT_BOOL hasDevData;
